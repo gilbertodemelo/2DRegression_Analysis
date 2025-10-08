@@ -4,11 +4,32 @@
 
 
 struct Point {
-    float x;
-    float y;
+    double x;
+    double y;
 };
 
+// prototypes
+double averageX(std::vector<Point> *);
+double averageY(std::vector<Point> *);
+double b(std::vector<Point>);
+double a(std::vector<Point>);
+
+
+
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+
+    // create vector of points
+    std::vector<Point> vec;
+
+}
+
+
+
+double averageX(std::vector<Point> &vec) {
+    double avgX = 0.0;
+    double sum = 0;
+    for (auto & i : vec) {
+        sum += i.x;
+    }
+    return avgX;
 }
