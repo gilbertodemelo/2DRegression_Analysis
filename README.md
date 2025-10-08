@@ -7,16 +7,16 @@ space.
 
 ### Concept
 We model data as
-$$
+$
 y = 2x + 1 + noise
-$$
+$
 
 where the $noise$ simulates random measurement error.
 The linear regression algorithm finds coefficients $a, b$ that
 minimize
-$$
+$
 MSE(a,b) = \frac{1}{n} \sum_i(y_i-(a+bx_i))^2
-$$
+$
 
 The analytical solution for the parameters is given by:
 
