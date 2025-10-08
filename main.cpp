@@ -8,6 +8,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <fstream>
 
 
 struct Point {
@@ -34,11 +35,21 @@ int main() {
     // create vector of points
     std::vector<Point> vec(10000);
 
+    // write results into a file
+    std::fstream outfile;
+    outfile.open("points.csv", std::ios::out | std::ios::app);
+
+    // headers of the file
+    outfile << "x, y" << std::endl;
+
     for (int i = 0; i < vec.size(); i++) {
         vec[i].x = i / 2.0;
         vec[i].y = 2 * vec[i].x + 1 + noise(gen);
         //std::cout << vec[i].x << ", " << vec[i].y << std::endl;
+        outfile << vec[i].x << ", " << vec[i].y <<  std::endl;
     }
+
+    outfile.close();
 
     std::cout << "Average X: " << averageX(vec) << std::endl;
     std::cout << "Average Y: " << averageY(vec) << std::endl;
