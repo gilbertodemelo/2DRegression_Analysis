@@ -21,6 +21,9 @@ double averageX(std::vector<Point> &);
 double averageY(std::vector<Point> &);
 double b(std::vector<Point> &);
 double a(std::vector<Point> &);
+double mse(std::vector<Point> &, double, double);
+double r2(std::vector<Point> &, double, double);
+
 
 
 
@@ -30,33 +33,64 @@ int main() {
     std::mt19937 gen(rd()); // Mersenne Twister engine
 
     // Creates the normal distribution
-    std::normal_distribution<double> noise(0.0, 1.0);
+    std::normal_distribution<double> noise(0.0, 10.0);
 
     // create vector of points
     std::vector<Point> vec(10000);
 
     // write results into a file
     std::fstream outfile;
-    outfile.open("points.csv", std::ios::out | std::ios::app);
+    outfile.open("points.csv", std::ios::out);
 
     // headers of the file
-    outfile << "x, y" << std::endl;
+    outfile << "x,y" << std::endl;
 
     for (int i = 0; i < vec.size(); i++) {
-        vec[i].x = i / 2.0;
+        vec[i].x = i / 2.0 + noise(gen) + 0.3;
         vec[i].y = 2 * vec[i].x + 1 + noise(gen);
         //std::cout << vec[i].x << ", " << vec[i].y << std::endl;
-        outfile << vec[i].x << ", " << vec[i].y <<  std::endl;
+        outfile << vec[i].x << "," << vec[i].y <<  std::endl;
     }
 
     outfile.close();
 
-    std::cout << "Average X: " << averageX(vec) << std::endl;
-    std::cout << "Average Y: " << averageY(vec) << std::endl;
-    std::cout << "b: " << b(vec) << std::endl;
-    std::cout << "a: " << a(vec) << std::endl;
+    double _a = a(vec);
+    double _b = b(vec);
+
+    std::cout << _a << " " << _b << " "
+              << mse(vec, _a, _b) << " "
+              << r2(vec, _a, _b) << std::endl;
+
 
     return 0;
+
+}
+
+double r2(std::vector<Point> &vec, double a, double b) {
+    double avgY = averageY(vec);
+
+    double ss_tot = 0.0;
+    double ss_res = 0.0;
+    for (auto &i : vec) {
+        double y_pred = a + b * i.x;
+        ss_res += (i.y - y_pred) * (i.y - y_pred);
+        ss_tot += (i.y - avgY) * (i.y - avgY);
+    }
+
+    return 1 - (ss_res / ss_tot);
+}
+
+double mse(std::vector<Point> &vec, double a, double b) {
+
+    double res = 0.0;
+
+    for(int i = 0; i < vec.size(); i++) {
+        double y_i = vec[i].y;
+        double x_i = vec[i].x;
+        res += (y_i - (a + (b * x_i))) * (y_i - (a + (b * x_i)));
+    }
+
+    return res/ (double) vec.size();
 
 }
 
