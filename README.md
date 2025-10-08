@@ -8,7 +8,7 @@ space.
 ### Concept
 We model data as
 $$
-y = 2x + 1 + \text{noise}
+y = 2x + 1 + noise
 $$
 
 where the $noise$ simulates random measurement error.
