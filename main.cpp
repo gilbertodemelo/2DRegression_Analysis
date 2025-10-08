@@ -29,16 +29,21 @@ int main() {
     std::mt19937 gen(rd()); // Mersenne Twister engine
 
     // Creates the normal distribution
-    std::normal_distribution<double> noise(0.0, 0.4);
+    std::normal_distribution<double> noise(0.0, 1.0);
 
     // create vector of points
-    std::vector<Point> vec(100);
+    std::vector<Point> vec(10000);
 
     for (int i = 0; i < vec.size(); i++) {
         vec[i].x = i / 2.0;
         vec[i].y = 2 * vec[i].x + 1 + noise(gen);
-        std::cout << vec[i].x << ", " << vec[i].y << std::endl;
+        //std::cout << vec[i].x << ", " << vec[i].y << std::endl;
     }
+
+    std::cout << "Average X: " << averageX(vec) << std::endl;
+    std::cout << "Average Y: " << averageY(vec) << std::endl;
+    std::cout << "b: " << b(vec) << std::endl;
+    std::cout << "a: " << a(vec) << std::endl;
 
     return 0;
 
@@ -54,33 +59,39 @@ double averageX(std::vector<Point> &vec) {
         sum += i.x;
     }
 
-    return sum / vec.size();
+    return sum / (double) vec.size();
 }
 
 double averageY(std::vector<Point> &vec) {
-    double avgY = 0.0;
-    double sum = 0;
 
+    double sum = 0.0;
     for (auto &i : vec) {
         sum += i.y;
     }
 
-    return sum / vec.size();
+    return sum / (double) vec.size();
 }
 
 double b(std::vector<Point> &vec) {
 
     double avgX = averageX(vec);
     double avgY = averageY(vec);
-    double sumX = 0.0;
-    double sumY = 0.0;
+    double num = 0.0;
+    double denominator = 0.0;
 
-    for (int i = 0; i < vec.size(); i++) {
-        sumX += vec[i].x - avgX;
-        sumY += vec[i].y - avgY;
+    for (auto & i : vec) {
+        double dx = i.x - avgX;
+        double dy = i.y - avgY;
+        num += dx * dy;
+        denominator += dx * dx;
     }
 
-    return (sumX * sumY) / (sumX * sumX);
+    if (denominator == 0.0) {
+        std::cerr << "Warning: zero variance in x, slope undefined.\n";
+        return 0.0;
+    }
+
+    return num / denominator;
 }
 
 double a(std::vector<Point> &vec) {
