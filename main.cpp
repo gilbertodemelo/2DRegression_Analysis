@@ -25,10 +25,22 @@ double a(std::vector<Point> &);
 
 int main() {
 
+    std::random_device rd;  // seeds the generator with real entropy
+    std::mt19937 gen(rd()); // Mersenne Twister engine
 
+    // Creates the normal distribution
+    std::normal_distribution<double> noise(0.0, 0.4);
 
     // create vector of points
-    std::vector<Point> vec;
+    std::vector<Point> vec(100);
+
+    for (int i = 0; i < vec.size(); i++) {
+        vec[i].x = i / 2.0;
+        vec[i].y = 2 * vec[i].x + 1 + noise(gen);
+        std::cout << vec[i].x << ", " << vec[i].y << std::endl;
+    }
+
+    return 0;
 
 }
 
